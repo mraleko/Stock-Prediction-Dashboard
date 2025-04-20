@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Details</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="/" style="text-decoration:none;color:#007bff;">&larr; Back to Dashboard</a>
+        <div class="search-top-right">
+            <div class="search-container">
+                <input type="text" id="ticker-search" placeholder="Enter stock ticker (e.g., AAPL)">
+                <button id="search-stock-btn">Search</button>
+            </div>
+        </div>
+        <header>
+            <h1 id="stock-title">
+                <span id="current-price"></span>
+            </h1>
+        </header>
+        <div class="time-filters">
+            <button data-period="1w" class="time-button">1W</button>
+            <button data-period="1m" class="time-button">1M</button>
+            <button data-period="6m" class="time-button active">6M</button>
+            <button data-period="1y" class="time-button">1Y</button>
+            <button data-period="5y" class="time-button">5Y</button>
+            <button data-period="max" class="time-button">MAX</button>
+        </div>
+        <div class="chart-container">
+            <canvas id="stockChart"></canvas>
+        </div>
+        <div class="prediction-info">
+            <h2>Price Prediction</h2>
+            <div id="prediction-value"></div>
+        </div>
+    </div>
+    <script src="stock.js"></script>
+</body>
+</html>

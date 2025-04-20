@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Prediction App</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stock Prediction Dashboard</h1>
+        </header>
+        <div class="disclaimer" style="background:#fff3cd;color:#856404;border:1px solid #ffeeba;padding:15px;border-radius:6px;margin-bottom:20px;">
+            <strong>Disclaimer:</strong> This dashboard uses a machine learning model (LSTM neural network) trained on historical stock data and technical indicators to predict the next 5 days of closing prices. These predictions are for informational and educational purposes only and may not reflect actual future prices. Stock market predictions are inherently uncertain and should not be relied upon for investment decisions.
+        </div>
+        <header>
+            <div class="search-bar-fullwidth-col">
+                <div class="search-container search-bar-fullwidth">
+                    <input type="text" id="ticker-search" placeholder="Enter stock ticker (e.g., AAPL)">
+                    <button id="go-stock-page">Go</button>
+                </div>
+                <div id="sp500-stock-list-section" class="sp500-stock-list-fullwidth">
+                    <div id="sp500-stock-list" class="sp500-stock-list"></div>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button id="sp500-prev-btn" style="display:none;">Previous 10</button>
+                        <button id="sp500-next-btn">Next 10</button>
+                    </div>
+                </div>
+            </div>
+            <div class="sp500-section" style="margin-bottom:30px;">
+                <h2>
+                    S&amp;P 500 (^GSPC)
+                    <span id="sp500-current-price"></span>
+                </h2>
+                <div class="time-filters" id="sp500-time-filters" style="margin-bottom:10px;">
+                    <button data-period="1w" class="sp500-time-button">1W</button>
+                    <button data-period="1m" class="sp500-time-button">1M</button>
+                    <button data-period="6m" class="sp500-time-button active">6M</button>
+                    <button data-period="1y" class="sp500-time-button">1Y</button>
+                    <button data-period="5y" class="sp500-time-button">5Y</button>
+                    <button data-period="max" class="sp500-time-button">MAX</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sp500Chart"></canvas>
+                </div>
+                <div class="prediction-info">
+                    <h3>S&amp;P 500 Price Prediction</h3>
+                    <div id="sp500-prediction-value"></div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <script>
+        document.getElementById('go-stock-page').addEventListener('click', function() {
+            const ticker = document.getElementById('ticker-search').value;
+            if (ticker) {
+                window.location.href = `/stock.html?ticker=${ticker}`;
+            }
+        });
+    </script>
+    <script src="app.js"></script>
+    <div class="container" style="margin-top:40px;margin-bottom:40px;">
+        <div style="background:#f8f9fa;border-radius:8px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <h2 style="margin-top:0;">Stock Prediction Model Features</h2>
+            <ol>
+                <li>
+                    <strong>Data Collection &amp; Preprocessing</strong>
+                    <ul>
+                        <li><strong>Data Source:</strong> Historical OHLCV (Open, High, Low, Close, Volume) data from Yahoo Finance (yfinance).</li>
+                        <li><strong>Technical Indicators Added:</strong>
+                            <ul>
+                                <li><strong>Moving Averages (MA10, MA20)</strong> – Smooths price trends.</li>
+                                <li><strong>Relative Strength Index (RSI)</strong> – Measures momentum (overbought/oversold conditions).</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scaling:</strong> Data is normalized using MinMaxScaler (fit only on training data to avoid leakage).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Model Architecture (LSTM)</strong>
+                    <ul>
+                        <li><strong>Input:</strong> Sequences of the last 60 days of:
+                            <ul>
+                                <li>OHLC prices</li>
+                                <li>Volume</li>
+                                <li>MA10, MA20, RSI</li>
+                            </ul>
+                        </li>
+                        <li><strong>LSTM Layers:</strong>
+                            <ul>
+                                <li>2 LSTM layers (64 hidden units each) with dropout (0.2) to prevent overfitting.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Output Layer:</strong> Dense layer predicting 5 future closing prices.</li>
+                        <li><strong>Loss Function:</strong> SmoothL1Loss (less sensitive to outliers than MSE).</li>
+                        <li><strong>Optimizer:</strong> Adam (adaptive learning rate).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Training Process</strong>
+                    <ul>
+                        <li><strong>Train/Validation Split:</strong> Last 10% of data is held out for validation.</li>
+                        <li><strong>Sequence Generation:</strong>
+                            <ul>
+                                <li>Each input sequence = 60 days of data.</li>
+                                <li>Each target = next 5 closing prices.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Epochs:</strong> Trained for 50 iterations (adjustable).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Making Predictions</strong>
+                    <ul>
+                        <li>Fetch recent stock data (last ~60 days).</li>
+                        <li>Add technical indicators and scale using the trained MinMaxScaler.</li>
+                        <li>Feed the sequence into the LSTM.</li>
+                        <li>Inverse-transform predictions to get actual price values.</li>
+                        <li>Return forecasts for the next 5 business days.</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

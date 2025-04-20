@@ -1,0 +1,328 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0;
+    background: #e3eafc; /* distinct light blue */
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    align-items: center;
+    width: auto;
+    min-width: 0;
+    max-width: 340px;
+}
+
+.search-bar-fullwidth-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.search-bar-fullwidth {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 18px auto;
+    display: flex;
+    gap: 0;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    background: #fff;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+}
+
+#ticker-search {
+    flex: 1;
+    max-width: none;
+    min-width: 0;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    background: #f8fafc;
+    box-shadow: none;
+    font-weight: 500;
+    height: 36px;
+}
+
+#go-stock-page {
+    padding: 0 36px;
+    font-size: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    height: 64px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+#search-stock-btn {
+    padding: 0 18px;
+    font-size: 1rem;
+    border-radius: 0 4px 4px 0;
+    height: 36px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+#go-stock-page:hover {
+    background-color: #0056b3;
+}
+
+#search-stock-btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 700px) {
+    .search-bar-fullwidth {
+        max-width: 100%;
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    #ticker-search, #go-stock-page {
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1.2rem;
+        height: 48px;
+        padding: 12px 16px;
+    }
+    #go-stock-page {
+        margin-top: 8px;
+        border-radius: 8px;
+    }
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 100%;
+        padding: 8px;
+    }
+    #ticker-search, #search-stock-btn {
+        border-radius: 4px;
+        width: 100%;
+        font-size: 1rem;
+        height: 36px;
+        padding: 8px 12px;
+    }
+    #search-stock-btn {
+        margin-top: 6px;
+        border-radius: 4px;
+    }
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.time-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.time-button {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+}
+
+.time-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.prediction-info {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.prediction-info div {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.prediction-info p {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#current-price {
+    color: #28a745; /* green */
+    margin-left: 18px;
+    font-size: inherit;
+    vertical-align: middle;
+}
+
+.sp500-stock-list-fullwidth {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+.sp500-stock-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    padding: 12px 10px;
+    margin-bottom: 0;
+    font-size: 15px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.sp500-stock-list a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 4px 0;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.sp500-stock-list a:hover {
+    background: #f0f8ff;
+    text-decoration: underline;
+}
+
+/* Add styles for S&P 500 stock list columns and header */
+.sp500-stock-list > div {
+    min-height: 28px;
+}
+.sp500-stock-list > div:first-child {
+    background: #f8f9fa;
+    font-weight: bold;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 4px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.sp500-stock-list > div:not(:first-child):hover {
+    background: #f0f8ff;
+}
+
+/* Ensure S&P 500 time buttons match stock time buttons */
+.sp500-time-button {
+    background-color: #f8f9fa;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sp500-time-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.sp500-time-button:hover:not(.active) {
+    background-color: #e3eafc;
+}
+
+/* Responsive: stack columns on small screens */
+@media (max-width: 700px) {
+    .sp500-stock-list > div {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 2px !important;
+    }
+    .sp500-stock-list > div > div {
+        width: 100% !important;
+        flex: none !important;
+    }
+    .sp500-stock-list > div:first-child {
+        display: none !important;
+    }
+}
+
+#sp500-next-btn,
+#sp500-prev-btn {
+    width: 120px;
+    box-sizing: border-box;
+    padding: 4px 10px;
+    font-size: 0.95rem;
+    height: 32px;
+}
+
+#sp500-next-btn:disabled,
+#sp500-prev-btn:disabled {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+    border: none;
+    opacity: 1;
+}
+
+.search-top-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* Responsive: stack search bar on small screens */
+@media (max-width: 700px) {
+    .search-top-right {
+        justify-content: center;
+        margin-top: 10px;
+    }
+}
