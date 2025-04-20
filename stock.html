@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark/light mode">🌙</button>
     <div class="container">
         <a href="/" style="text-decoration:none;color:#007bff;">&larr; Back to Dashboard</a>
         <div class="search-top-right">
@@ -39,5 +40,26 @@
         </div>
     </div>
     <script src="stock.js"></script>
+    <script>
+    // Theme toggle logic
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        document.getElementById('theme-toggle-btn').textContent = theme === 'light' ? '🌞' : '🌙';
+    }
+    function toggleTheme() {
+        const current = document.body.getAttribute('data-theme') || 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
+    // On load, set theme from localStorage or system preference
+    (function() {
+        let theme = localStorage.getItem('theme');
+        if (!theme) {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        setTheme(theme);
+    })();
+    </script>
 </body>
 </html>

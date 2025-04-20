@@ -9,11 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark/light mode">🌙</button>
     <div class="container">
         <header>
             <h1>Stock Prediction Dashboard</h1>
         </header>
-        <div class="disclaimer" style="background:#fff3cd;color:#856404;border:1px solid #ffeeba;padding:15px;border-radius:6px;margin-bottom:20px;">
+        <div class="disclaimer">
             <strong>Disclaimer:</strong> This dashboard uses a machine learning model (LSTM neural network) trained on historical stock data and technical indicators to predict the next 5 days of closing prices. These predictions are for informational and educational purposes only and may not reflect actual future prices. Stock market predictions are inherently uncertain and should not be relied upon for investment decisions.
         </div>
         <header>
@@ -62,8 +63,29 @@
         });
     </script>
     <script src="app.js"></script>
+    <script>
+    // Theme toggle logic
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        document.getElementById('theme-toggle-btn').textContent = theme === 'light' ? '🌞' : '🌙';
+    }
+    function toggleTheme() {
+        const current = document.body.getAttribute('data-theme') || 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
+    // On load, set theme from localStorage or system preference
+    (function() {
+        let theme = localStorage.getItem('theme');
+        if (!theme) {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        setTheme(theme);
+    })();
+    </script>
     <div class="container" style="margin-top:40px;margin-bottom:40px;">
-        <div style="background:#f8f9fa;border-radius:8px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div class="model-features-card">
             <h2 style="margin-top:0;">Stock Prediction Model Features</h2>
             <ol>
                 <li>

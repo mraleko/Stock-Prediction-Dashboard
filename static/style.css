@@ -1,22 +1,74 @@
+:root {
+    --bg: #181a20;
+    --fg: #e5e7ef;
+    --card-bg: #232634;
+    --accent: #2563eb;
+    --accent-hover: #1e40af;
+    --success: #22c55e;
+    --link: #60a5fa;
+    --link-hover: #93c5fd;
+    --border: #31344a;
+    --warning-bg: #232634;
+    --warning-fg: #facc15;
+    --warning-border: #facc15;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: var(--bg);
+    color: var(--fg);
+}
+
+body[data-theme="light"] {
+    --bg: #f8fafc;
+    --fg: #181a20;
+    --card-bg: #fff;
+    --accent: #2563eb;
+    --accent-hover: #1e40af;
+    --success: #22c55e;
+    --link: #2563eb;
+    --link-hover: #1e40af;
+    --border: #e5e7ef;
+    --warning-bg: #fffbe6;
+    --warning-fg: #b45309;
+    --warning-border: #fde68a;
+}
+
+.theme-toggle-btn {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    background: var(--card-bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.theme-toggle-btn:hover {
+    background: var(--accent);
+    color: #fff;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    background: none;
 }
 
 header {
     margin-bottom: 30px;
 }
 
-h1 {
-    color: #333;
+h1, h2, h3 {
+    color: var(--fg);
     margin-bottom: 20px;
 }
 
@@ -24,10 +76,10 @@ h1 {
     display: flex;
     gap: 8px;
     margin-bottom: 0;
-    background: #e3eafc; /* distinct light blue */
+    background: var(--card-bg);
     border-radius: 6px;
     padding: 6px 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.24);
     align-items: center;
     width: auto;
     min-width: 0;
@@ -47,9 +99,9 @@ h1 {
     margin: 0 auto 18px auto;
     display: flex;
     gap: 0;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.32);
     border-radius: 8px;
-    background: #fff;
+    background: var(--card-bg);
     padding: 0;
     position: relative;
     z-index: 2;
@@ -64,7 +116,8 @@ h1 {
     border: none;
     border-radius: 4px 0 0 4px;
     outline: none;
-    background: #f8fafc;
+    background: var(--card-bg);
+    color: var(--fg);
     box-shadow: none;
     font-weight: 500;
     height: 36px;
@@ -75,8 +128,8 @@ h1 {
     font-size: 1.5rem;
     border-radius: 0 8px 8px 0;
     height: 64px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    color: #fff;
     border: none;
     cursor: pointer;
     font-weight: 600;
@@ -88,20 +141,17 @@ h1 {
     font-size: 1rem;
     border-radius: 0 4px 4px 0;
     height: 36px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    color: #fff;
     border: none;
     cursor: pointer;
     font-weight: 600;
     transition: background-color 0.3s;
 }
 
-#go-stock-page:hover {
-    background-color: #0056b3;
-}
-
+#go-stock-page:hover,
 #search-stock-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--accent-hover);
 }
 
 @media (max-width: 700px) {
@@ -142,8 +192,8 @@ h1 {
 
 button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -151,7 +201,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--accent-hover);
 }
 
 .time-filters {
@@ -161,43 +211,55 @@ button:hover {
 }
 
 .time-button {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: var(--card-bg);
+    color: var(--fg);
     font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .time-button.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    color: #fff;
+}
+
+.time-button:hover:not(.active) {
+    background-color: var(--border);
 }
 
 .chart-container {
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.32);
     margin-bottom: 20px;
 }
 
 .prediction-info {
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.32);
 }
 
 .prediction-info div {
     margin: 5px 0;
     font-size: 14px;
+    color: var(--fg);
 }
 
 .prediction-info p {
     font-weight: bold;
     margin-bottom: 10px;
+    color: var(--fg);
 }
 
 #current-price {
-    color: #28a745; /* green */
+    color: var(--success);
     margin-left: 18px;
     font-size: inherit;
     vertical-align: middle;
@@ -213,9 +275,9 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.18);
     padding: 12px 10px;
     margin-bottom: 0;
     font-size: 15px;
@@ -225,7 +287,7 @@ button:hover {
 }
 
 .sp500-stock-list a {
-    color: #007bff;
+    color: var(--link);
     text-decoration: none;
     padding: 4px 0;
     border-radius: 4px;
@@ -233,32 +295,33 @@ button:hover {
 }
 
 .sp500-stock-list a:hover {
-    background: #f0f8ff;
+    background: var(--bg);
+    color: var(--link-hover);
     text-decoration: underline;
 }
 
-/* Add styles for S&P 500 stock list columns and header */
 .sp500-stock-list > div {
     min-height: 28px;
 }
 .sp500-stock-list > div:first-child {
-    background: #f8f9fa;
+    background: var(--card-bg);
     font-weight: bold;
     border-radius: 6px 6px 0 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 4px;
     padding-top: 6px;
     padding-bottom: 6px;
+    color: var(--fg);
 }
 
 .sp500-stock-list > div:not(:first-child):hover {
-    background: #f0f8ff;
+    background: var(--bg);
 }
 
 /* Ensure S&P 500 time buttons match stock time buttons */
 .sp500-time-button {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: var(--card-bg);
+    color: var(--fg);
     border: none;
     border-radius: 4px;
     padding: 8px 18px;
@@ -269,12 +332,12 @@ button:hover {
 }
 
 .sp500-time-button.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    color: #fff;
 }
 
 .sp500-time-button:hover:not(.active) {
-    background-color: #e3eafc;
+    background-color: var(--border);
 }
 
 /* Responsive: stack columns on small screens */
@@ -300,12 +363,17 @@ button:hover {
     padding: 4px 10px;
     font-size: 0.95rem;
     height: 32px;
+    background-color: var(--card-bg);
+    color: var(--fg);
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
 #sp500-next-btn:disabled,
 #sp500-prev-btn:disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
+    background-color: var(--border);
+    color: #6b7280;
     cursor: not-allowed;
     border: none;
     opacity: 1;
@@ -325,4 +393,52 @@ button:hover {
         justify-content: center;
         margin-top: 10px;
     }
+}
+
+/* Miscellaneous dark mode tweaks */
+::-webkit-input-placeholder { color: #a1a1aa; }
+::-moz-placeholder { color: #a1a1aa; }
+:-ms-input-placeholder { color: #a1a1aa; }
+::placeholder { color: #a1a1aa; }
+
+a {
+    color: var(--link);
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+.disclaimer {
+    background: var(--warning-bg);
+    color: var(--warning-fg);
+    border: 1px solid var(--warning-border);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.model-features-card {
+    background: var(--card-bg);
+    color: var(--fg);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.32);
+}
+
+.model-features-card h2 {
+    color: var(--fg);
+}
+
+.model-features-card ol,
+.model-features-card ul {
+    color: var(--fg);
+}
+
+ol, ul {
+    color: var(--fg);
+}
+
+strong {
+    color: var(--fg);
 }
