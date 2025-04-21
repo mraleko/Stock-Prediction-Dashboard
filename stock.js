@@ -133,7 +133,8 @@ function updatePredictionInfo(predictionData) {
             latestHistoricalPrice = histData[histData.length - 1].y;
         }
     }
-    predictionElement.innerHTML = `
+    // Show current predictions
+    let html = `
         <p>5-Day Price Predictions:</p>
         ${predictions.map(pred => {
             let pct = '';
@@ -145,6 +146,84 @@ function updatePredictionInfo(predictionData) {
             return `<div>${pred.Date}: $${pred.Close.toFixed(2)}${pct}</div>`;
         }).join('')}
     `;
+
+    // Show prediction history with actuals
+    if (predictionData.prediction_history && predictionData.prediction_history.length > 0) {
+        html += `<hr><p><strong>Past Predictions vs Actuals:</strong></p>`;
+        html += `<table style="width:100%;font-size:13px;"><tr><th>Date</th><th>Predicted</th><th>Actual</th><th>Error</th></tr>`;
+        // Deduplicate: keep only the latest prediction per date
+        const deduped = {};
+        for (const entry of predictionData.prediction_history) {
+            // If not present or this entry is newer, keep it
+            if (
+                !deduped[entry.Date] ||
+                (entry.timestamp && deduped[entry.Date].timestamp && entry.timestamp > deduped[entry.Date].timestamp)
+            ) {
+                deduped[entry.Date] = entry;
+            }
+        }
+        // Sort by date ascending
+        const sorted = Object.values(deduped).sort((a, b) => a.Date.localeCompare(b.Date));
+        // Only keep the last 10 days of *history* (exclude future prediction dates)
+        const today = new Date();
+        const filtered = sorted.filter(entry => {
+            const entryDate = new Date(entry.Date);
+            return entryDate <= today;
+        });
+        let last10 = filtered;
+        if (filtered.length > 10) {
+            last10 = filtered.slice(-10);
+        }
+        let prevActual = null;
+        for (const entry of last10) {
+            let err = '';
+            if (entry.actual_close !== null && entry.actual_close !== undefined) {
+                const diff = entry.predicted_close - entry.actual_close;
+                const pct = (diff / entry.actual_close) * 100;
+                err = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
+            }
+            // Compute % change from previous actual close to current actual close
+            let actualPctChange = '';
+            if (
+                prevActual !== null &&
+                entry.actual_close !== null &&
+                entry.actual_close !== undefined &&
+                prevActual !== undefined &&
+                prevActual !== null
+            ) {
+                const pctVal = ((entry.actual_close - prevActual) / prevActual) * 100;
+                actualPctChange = ` <span style="color:${pctVal >= 0 ? 'green' : 'red'}">${pctVal >= 0 ? '+' : ''}${pctVal.toFixed(2)}%</span>`;
+            } else if (
+                entry.pct_change_from_last !== null &&
+                entry.pct_change_from_last !== undefined
+            ) {
+                const pctVal = entry.pct_change_from_last;
+                actualPctChange = ` <span style="color:${pctVal >= 0 ? 'green' : 'red'}">${pctVal >= 0 ? '+' : ''}${pctVal.toFixed(2)}%</span>`;
+            }
+            // Predicted % change from previous day's historical close
+            let predPctChange = '';
+            if (
+                entry.pct_change_from_last !== null &&
+                entry.pct_change_from_last !== undefined
+            ) {
+                const pctVal = entry.pct_change_from_last;
+                predPctChange = ` <span style="color:${pctVal >= 0 ? 'green' : 'red'}">${pctVal >= 0 ? '+' : ''}${pctVal.toFixed(2)}%</span>`;
+            }
+            html += `<tr>
+                <td>${entry.Date}</td>
+                <td>$${entry.predicted_close !== undefined ? entry.predicted_close.toFixed(2) : ''}${predPctChange}</td>
+                <td>${entry.actual_close !== null && entry.actual_close !== undefined ? '$' + entry.actual_close.toFixed(2) : '-'}${actualPctChange}</td>
+                <td>${err}</td>
+            </tr>`;
+            // Update prevActual for next row
+            if (entry.actual_close !== null && entry.actual_close !== undefined) {
+                prevActual = entry.actual_close;
+            }
+        }
+        html += `</table>`;
+    }
+
+    predictionElement.innerHTML = html;
 }
 
 window.addEventListener('DOMContentLoaded', () => {

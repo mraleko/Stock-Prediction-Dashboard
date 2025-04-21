@@ -1,14 +1,18 @@
 # Stock Prediction Dashboard
 
-This project is a web application for visualizing historical stock prices and predicting the next 5 days of closing prices using a machine learning model (LSTM neural network). It supports both stocks (including S&P 500 constituents) and major cryptocurrencies.
+A web application that combines historical stock price visualization with machine learning-powered price predictions. Using an LSTM neural network model, it provides 5-day price forecasts for stocks (including all S&P 500 constituents) and major cryptocurrencies.
 
-## Features
+## Key Features
 
-- **Historical Price Charts:** Interactive charts for stocks and cryptocurrencies.
-- **5-Day Price Prediction:** LSTM-based neural network forecasts for the next 5 business days.
-- **Technical Indicators:** Uses moving averages (MA10, MA20) and RSI for improved predictions.
-- **S&P 500 & Crypto Lists:** Quick access to top S&P 500 stocks and major cryptocurrencies.
-- **Dark/Light Mode:** Toggleable theme for better viewing experience.
+- **Advanced Historical Price Charts:** 
+  - Interactive time-series visualization with Chart.js
+  - Multiple timeframes: 1W, 1M, 6M, 1Y, 5Y, MAX
+
+- **ML-Powered Price Predictions:**
+  - 5-day price forecasts
+  - Real-time prediction updates
+  - Historical prediction accuracy tracking
+  - Weekly model retraining for improved accuracy
 
 ## Technology Stack
 
@@ -26,8 +30,7 @@ This project is a web application for visualizing historical stock prices and pr
 
 1. **Clone the repository:**
     ```bash
-    git clone <repo-url>
-    cd Project\ 2
+    git clone https://github.com/mraleko/Stock-Prediction-Dashboard.git
     ```
 
 2. **Install dependencies:**
@@ -51,12 +54,32 @@ This project is a web application for visualizing historical stock prices and pr
 - **Change time period:** Use the time filter buttons above each chart.
 - **View predictions:** See the next 5-day price forecast and percentage change.
 
-## Model Details
+## Model Architecture
 
-- **Architecture:** 2-layer LSTM (64 hidden units, dropout 0.2), Dense output for 5-day prediction.
-- **Inputs:** Last 60 days of OHLCV + MA10, MA20, RSI.
-- **Training:** Trained on up to 10 years of historical data, retrained weekly per ticker.
-- **Loss:** SmoothL1Loss.
+### LSTM Neural Network
+- Input layer: 60-day sequences (OHLCV + technical indicators)
+- 2 LSTM layers with 64 hidden units each
+- Dropout regularization (0.2) for overfitting prevention
+- Dense output layer for 5-day price sequence prediction
+- SmoothL1Loss for robust training
+
+### Technical Indicators
+- 10-day Moving Average (MA10)
+- 20-day Moving Average (MA20)
+- Relative Strength Index (RSI)
+
+### Training Process
+1. Data preprocessing and normalization
+2. Weekly retraining schedule per ticker
+3. Automatic model persistence and versioning
+4. Historical prediction tracking for accuracy analysis
+
+## Performance Monitoring
+
+The dashboard tracks and displays:
+- Prediction accuracy vs actual prices
+- Percentage error analysis
+- Historical prediction performance
 
 ## Disclaimer
 

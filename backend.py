@@ -103,17 +103,18 @@ MODELS_DIR = 'stock_models'
 if not os.path.exists(MODELS_DIR):
     os.makedirs(MODELS_DIR)
 
+PREDICTIONS_DIR = os.path.join(MODELS_DIR, 'predictions')
+if not os.path.exists(PREDICTIONS_DIR):
+    os.makedirs(PREDICTIONS_DIR)
+
 def get_model_path(ticker):
     return os.path.join(MODELS_DIR, f'{ticker}_model.pth')
 
 def get_meta_path(ticker):
     return os.path.join(MODELS_DIR, f'{ticker}_meta.json')
 
-def get_current_week_str():
-    # Returns a string like '2024-W27'
-    today = date.today()
-    year, week, _ = today.isocalendar()
-    return f"{year}-W{week:02d}"
+def get_predictions_path(ticker):
+    return os.path.join(PREDICTIONS_DIR, f'{ticker}_predictions.json')
 
 def load_last_retrain_week(ticker):
     meta_path = get_meta_path(ticker)
@@ -137,6 +138,95 @@ def save_last_retrain_week(ticker, week_str):
     meta_path = get_meta_path(ticker)
     with open(meta_path, 'w') as f:
         json.dump({'last_retrain_week': week_str}, f)
+
+def load_prediction_history(ticker):
+    path = get_predictions_path(ticker)
+    if os.path.exists(path):
+        try:
+            with open(path, 'r') as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+def save_prediction_history(ticker, history):
+    path = get_predictions_path(ticker)
+    with open(path, 'w') as f:
+        json.dump(history, f)
+
+def append_predictions_to_history(ticker, predictions, timestamp):
+    history = load_prediction_history(ticker)
+    # Each prediction is a dict: {'Date': ..., 'Close': ...}
+    for pred in predictions:
+        # Only add if not already present for this date and timestamp
+        exists = any(
+            (h['Date'] == pred['Date'] and h.get('timestamp') == timestamp)
+            for h in history
+        )
+        if not exists:
+            entry = {
+                'Date': pred['Date'],
+                'predicted_close': pred['Close'],
+                'timestamp': timestamp
+            }
+            history.append(entry)
+    save_prediction_history(ticker, history)
+
+def enrich_history_with_actuals(ticker, history):
+    # For each prediction in history, fetch the actual close if available
+    if not history:
+        return []
+    # Get all unique dates predicted
+    dates = sorted(set(h['Date'] for h in history))
+    yf_ticker = yfinance_symbol(ticker)
+    stock = yf.Ticker(yf_ticker)
+    # Fetch historical data covering all predicted dates and a buffer before
+    try:
+        min_date = min(dates)
+        max_date = max(dates)
+        hist = stock.history(start=(pd.to_datetime(min_date) - pd.Timedelta(days=10)).strftime('%Y-%m-%d'), end=(pd.to_datetime(max_date) + pd.Timedelta(days=2)).strftime('%Y-%m-%d'))
+        hist = hist.reset_index()
+        hist['Date'] = hist['Date'].dt.strftime('%Y-%m-%d')
+        close_map = {row['Date']: row['Close'] for _, row in hist.iterrows()}
+        # Build a sorted list of trading dates for lookup
+        trading_dates = sorted(close_map.keys())
+    except Exception:
+        close_map = {}
+        trading_dates = []
+    # Attach actual close and pct_change_from_last if available
+    enriched = []
+    for h in history:
+        actual = close_map.get(h['Date'])
+        predicted = h['predicted_close']
+        # Find the last trading day before this prediction date
+        pct_change = None
+        try:
+            pred_date = h['Date']
+            # Find the previous trading date
+            prev_trading_date = None
+            for d in reversed(trading_dates):
+                if d < pred_date:
+                    prev_trading_date = d
+                    break
+            prev_hist_close = close_map.get(prev_trading_date) if prev_trading_date else None
+            if prev_hist_close is not None and predicted is not None:
+                pct_change = ((predicted - prev_hist_close) / prev_hist_close) * 100
+        except Exception:
+            pct_change = None
+        enriched.append({
+            'Date': h['Date'],
+            'predicted_close': predicted,
+            'actual_close': float(actual) if actual is not None and not pd.isna(actual) else None,
+            'timestamp': h.get('timestamp'),
+            'pct_change_from_last': pct_change
+        })
+    return enriched
+
+def get_current_week_str():
+    # Returns a string like '2024-W27'
+    today = date.today()
+    year, week, _ = today.isocalendar()
+    return f"{year}-W{week:02d}"
 
 def yfinance_symbol(ticker):
     # yfinance expects BRK.B as BRK-B, etc.
@@ -250,9 +340,17 @@ def predict_stock(ticker):
             'Close': round(price, 2)
         } for date, price in zip(future_dates, predictions)]
 
+        timestamp = pd.Timestamp.now().isoformat()
+        # Store predictions in history
+        append_predictions_to_history(ticker, prediction_data, timestamp)
+        # Load and enrich history with actuals
+        raw_history = load_prediction_history(ticker)
+        enriched_history = enrich_history_with_actuals(ticker, raw_history)
+
         return jsonify({
             'predictions': prediction_data,
-            'timestamp': pd.Timestamp.now().isoformat(),
+            'prediction_history': enriched_history,
+            'timestamp': timestamp,
             'last_retrain_week': last_retrain_week
         })
 
