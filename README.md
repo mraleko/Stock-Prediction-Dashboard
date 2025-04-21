@@ -8,7 +8,6 @@ This project is a web application for visualizing historical stock prices and pr
 - **5-Day Price Prediction:** LSTM-based neural network forecasts for the next 5 business days.
 - **Technical Indicators:** Uses moving averages (MA10, MA20) and RSI for improved predictions.
 - **S&P 500 & Crypto Lists:** Quick access to top S&P 500 stocks and major cryptocurrencies.
-- **Dark/Light Mode:** Toggleable theme for better viewing experience.
 
 ## Technology Stack
 
