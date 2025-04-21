@@ -27,7 +27,6 @@ This project is a web application for visualizing historical stock prices and pr
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/mraleko/Stock-Prediction-Dashboard.git
-    cd Project\ 2
     ```
 
 2. **Install dependencies:**
