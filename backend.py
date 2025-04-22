@@ -359,6 +359,6 @@ def predict_stock(ticker):
 
 
 if __name__ == '__main__':
-    # Use environment variable PORT if available (for Render)
+    # Development only - Gunicorn will handle production
     port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port)
+    app.run(port=port, debug=True)
