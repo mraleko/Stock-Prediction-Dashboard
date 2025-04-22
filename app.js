@@ -130,7 +130,7 @@ function updateSP500PredictionInfo(predictionData) {
     // Add prediction history with actuals table if available
     if (predictionData.prediction_history && predictionData.prediction_history.length > 0) {
         html += `<hr><p><strong>Past Predictions vs Actuals:</strong></p>`;
-        html += `<table style="width:100%;font-size:13px;"><tr><th>Date</th><th>Predicted</th><th>Actual</th><th>Error</th></tr>`;
+        html += `<table style="width:100%;font-size:13px;"><tr><th style="text-align:left">Date</th><th style="text-align:left">Predicted</th><th style="text-align:left">Actual</th><th style="text-align:left">Error</th></tr>`;
         // Deduplicate: keep only the latest prediction per date
         const deduped = {};
         for (const entry of predictionData.prediction_history) {
