@@ -88,12 +88,16 @@ This dashboard is for informational and educational purposes only. Predictions a
 ## File Structure
 
 ```
-backend.py           # Flask backend and ML logic
-static/
-  style.css          # Main CSS
-  index.html         # Dashboard homepage
-stock.html           # Stock details page
-stock.js             # Stock page JS
-app.js               # Dashboard JS
-stock_models/        # Saved models and scalers
+├── backend.py               # Flask backend server, ML models, data processing
+├── requirements.txt         # Python package dependencies
+├── app.js                  # Main dashboard JavaScript
+├── stock.js               # Individual stock page JavaScript
+├── stock.html            # Individual stock view template
+├── static/
+│   ├── style.css        # Global styles and theme system
+│   └── index.html       # Main dashboard template
+├── stock_models/        # Trained model storage
+│   ├── <ticker>_model.pth    # PyTorch model weights
+│   ├── <ticker>_meta.json    # Model metadata
+│   └── predictions/          # Historical predictions
 ```
