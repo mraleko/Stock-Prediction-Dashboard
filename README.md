@@ -2,6 +2,15 @@
 
 A web application that combines historical stock price visualization with machine learning-powered price predictions. Using an LSTM neural network model, it provides 5-day price forecasts for stocks (including all S&P 500 constituents) and major cryptocurrencies.
 
+
+## Screenshots
+
+### Main Dashboard
+![Main Dashboard](screenshots/dashboard.png)
+
+### Stock Detail View with Predictions
+![Stock Detail](screenshots/stock-detail.png)
+
 ## Key Features
 
 - **Advanced Historical Price Charts:** 
