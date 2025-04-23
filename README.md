@@ -35,7 +35,7 @@ A web application that combines historical stock price visualization with machin
 
 2. **Install dependencies:**
     ```bash
-    pip install flask torch yfinance pandas numpy scikit-learn
+    pip install -r requirements.txt
     ```
 
 3. **Run the backend server:**

@@ -359,6 +359,4 @@ def predict_stock(ticker):
 
 
 if __name__ == '__main__':
-    # Development only - Gunicorn will handle production
-    port = int(os.environ.get('PORT', 5001))
-    app.run(port=port, debug=True)
+    app.run(debug=True, port=5001)
